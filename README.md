@@ -15,24 +15,24 @@ Resize PDF pages to match their **TrimBox** or expand them by a user-defined **b
 
 ## Status
 
-**Not Yet Implemented**
+**Beta.** Core algorithm validated against production-level pre-press PDFs. See [Known Limitations](#known-limitations) for current tradeoffs.
 
 ---
 
 ## Usage
 
-```
+### Single-file mode
+
+```bash
 prsz [-b <thousandths>] [-t] <input.pdf> [output.pdf]
 ```
 
-| Flag / Argument | Description                                                                                         |
-|-----------------|-----------------------------------------------------------------------------------------------------|
-| `<input.pdf>`   | Path to the source PDF.                                                                             |
-| `[output.pdf]`  | Output path (default: `<input>-resized.pdf` beside the input).                                      |
+| Flag / Argument | Description                                                                                              |
+|-----------------|----------------------------------------------------------------------------------------------------------|
+| `<input.pdf>`   | Path to the source PDF.                                                                                  |
+| `[output.pdf]`  | Output path (default: `<input>-resized.pdf` beside the input). A directory is also accepted.             |
 | `-b <value>`    | Uniform bleed size in thousandths of an inch to add around the TrimBox (e.g. `-b 125` = ⅛" per side).   |
-| `-t`            | Crop MediaBox / CropBox to exactly match the TrimBox (remove all bleed / mark space).               |
-
-**Examples:**
+| `-t`            | Crop MediaBox / CropBox to exactly match the TrimBox (remove all bleed / mark space).                   |
 
 ```bash
 # Add 1/8 inch bleed around TrimBox
@@ -41,6 +41,44 @@ prsz -b 125 artwork.pdf
 # Crop page to TrimBox (no bleed)
 prsz -t artwork.pdf output.pdf
 ```
+
+### Batch mode
+
+```bash
+prsz [-b <thousandths>] [-t] [input-1.pdf, input-2.pdf, ...] [output/dir]
+```
+
+Pass a comma-separated list of input paths enclosed in square brackets, with
+an optional output directory as the final argument.
+
+| Argument           | Description                                                                                                   |
+|--------------------|---------------------------------------------------------------------------------------------------------------|
+| `[input-1.pdf, …]` | One or more PDF paths separated by commas, wrapped in `[` and `]`. Spaces around commas and paths are ignored. |
+| `[output/dir]`     | Directory where every resized file is written (optional). Defaults to the same directory as each input file.  |
+
+Each file is written as `<stem>-resized.pdf` inside the output directory. If
+any input file fails, processing continues and the exit code is 1 at the end.
+
+```bash
+# Batch — add 1/8" bleed, all output to a specific directory
+prsz -b 125 [art-1.pdf, art-2.pdf, art-3.pdf] output/resized/
+
+# Batch — each resized file beside its input
+prsz -b 125 [art-1.pdf, art-2.pdf, art-3.pdf]
+```
+
+> **zsh / bash note:** Square brackets are reserved glob syntax in most shells.
+> Escape them with backslashes on the command line:
+>
+> ```bash
+> prsz -b 125 \[art-1.pdf, art-2.pdf, art-3.pdf\] output/resized/
+> ```
+>
+> Alternatively, single-quote the entire bracket block:
+>
+> ```bash
+> prsz -b 125 '[art-1.pdf, art-2.pdf, art-3.pdf]' output/resized/
+> ```
 
 ### Install (global binary)
 
