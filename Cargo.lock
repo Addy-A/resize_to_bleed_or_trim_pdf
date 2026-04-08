@@ -643,7 +643,7 @@ dependencies = [
 
 [[package]]
 name = "resize_to_bleed_or_trim_pdf"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "lopdf",
 ]
