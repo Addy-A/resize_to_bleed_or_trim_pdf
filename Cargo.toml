@@ -1,0 +1,11 @@
+[package]
+name = "resize_to_bleed_or_trim_pdf"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+lopdf = "0.40.0"
+
+[[bin]]
+name = "prsz"
+path = "src/main.rs"

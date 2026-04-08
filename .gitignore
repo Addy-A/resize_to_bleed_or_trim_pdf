@@ -1,0 +1,5 @@
+/target
+/.vscode/
+.DS_Store
+/test/test_assets/secret_fixtures/
+/test/test_result/secret_results/
